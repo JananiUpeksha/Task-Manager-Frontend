@@ -1,0 +1,47 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h2>Create Account</h2>
+      <p>Get started with your task management</p>
+    </div>
+    
+    <form class="auth-form" (ngSubmit)="onSubmit()">
+      <div class="input-group">
+        <input type="text" placeholder=" " required>
+        <label>User Name</label>
+        <span class="focus-border"></span>
+      </div>
+
+      <div class="input-group">
+        <input type="password" placeholder=" " required>
+        <label>Password</label>
+        <span class="focus-border"></span>
+      </div>
+      
+      <div class="input-group">
+        <input type="password" placeholder=" " required>
+        <label>Confirm Password</label>
+        <span class="focus-border"></span>
+      </div>
+      
+      <div class="terms">
+        <label class="remember-me">
+          <input type="checkbox" required>
+          <span class="checkmark"></span>
+          I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a>
+        </label>
+      </div>
+      
+      <button type="submit" class="auth-btn">
+        <span>Sign Up</span>
+        <svg viewBox="0 0 24 24">
+          <path d="M5 12h14M12 5l7 7-7 7"></path>
+        </svg>
+      </button>
+      
+      <div class="auth-footer">
+        Already have an account? <a (click)="navigateToLogin()" class="auth-link">Log in</a>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,10 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { HeaderComponent } from './components/header/header.component';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent],
+      imports: [AppComponent, HeaderComponent], // Add HeaderComponent to imports
     }).compileComponents();
   });
 
@@ -14,16 +15,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'first-project' title`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('first-project');
-  });
-
-  it('should render title', () => {
+  it('should display the header', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, first-project');
+    
+    // Check if the header component is rendered
+    expect(compiled.querySelector('app-header')).toBeTruthy();
+    
+    // If you want to verify specific content in the header
+    const header = compiled.querySelector('app-header');
+    expect(header?.textContent).toContain('Task Manager'); // Match your header content
   });
 });

@@ -1,0 +1,33 @@
+<!-- layout.component.html -->
+<app-header></app-header>
+<div class="dashboard-container">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <img src="img.png" alt="Logo" class="sidebar-logo" />
+    </div>
+
+    <div class="nav-menu">
+      <a routerLink="/home" class="nav-item" [class.active]="isActive('/home')">
+        <i>📊</i> Dashboard
+      </a>
+      <a routerLink="/tasks" class="nav-item" [class.active]="isActive('/tasks')">
+        <i>✅</i> Manage Tasks
+      </a>
+      <a routerLink="/taskDetails" class="nav-item" [class.active]="isActive('/taskDetails')">
+        <i>📂</i> Task Details
+      </a>
+    </div>
+
+    <div class="logout-container">
+      <button class="logout-btn" (click)="logout()">
+        <i>🔓</i> Logout
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content Area with Router Outlet -->
+  <div class="main-content">
+    <router-outlet></router-outlet>
+  </div>
+</div>

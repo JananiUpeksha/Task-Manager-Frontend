@@ -1,0 +1,114 @@
+/* Main Container */
+.dashboard-container {
+    width: 100vw;
+    height: 90vh;
+    display: flex;
+    overflow: hidden;
+  }
+  
+  /* Sidebar - Matching Header Gradient */
+  .sidebar {
+    background: linear-gradient(135deg, #3f51b5 0%, #2196F3 100%);
+    width: 250px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    position: relative;
+  }
+  
+  /* Logout Button */
+  .logout-container {
+    padding: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  /* Sidebar Logo */
+.sidebar-logo {
+    width: 210px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+  
+  
+  .logout-btn {
+    width: 100%;
+    padding: 0.7rem;
+    background-color: rgba(255, 255, 255, 0.15);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: background-color 0.3s;
+  }
+  
+  .logout-btn:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+  }
+  
+  .sidebar-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .sidebar-header h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    text-align: center;
+  }
+  
+  /* Navigation Menu */
+  .nav-menu {
+    flex: 1;
+    padding: 1rem 0;
+    overflow-y: auto;
+  }
+  
+  .nav-item {
+    padding: 0.8rem 1.5rem;
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    margin: 0.2rem 1rem;
+    border-radius: 4px;
+  }
+  
+  .nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+  
+  .nav-item i {
+    margin-right: 0.8rem;
+  }
+  
+  /* Main Content Area */
+  .main-content {
+    flex: 1;
+    padding: 1.5rem;
+    overflow-y: auto;
+    background-color: #f5f7fa;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .dashboard-container {
+      flex-direction: column;
+      height: auto;
+    }
+    
+    .sidebar {
+      width: 100%;
+      height: auto;
+    }
+    
+    .main-content {
+      width: 100%;
+      padding: 1rem;
+    }
+  }

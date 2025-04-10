@@ -1,0 +1,132 @@
+<div class="container-fluid mt-4 px-4"> <!-- Full width container -->
+    <div class="row gx-4">
+      <!-- Left Column (Form) -->
+      <div class="col-md-6 mx-auto text-center"> <!-- Centered content -->
+        <div class="p-4 border rounded-3 bg-light">
+          <h2 class="mb-4">Task Manager</h2>
+          
+          <!-- Task Selection (now stacked vertically) -->
+          <div class="mb-4 d-flex align-items-center gap-2">
+            <select class="form-select flex-grow-1" [(ngModel)]="selectedTaskId">
+              <option value="">Select Task ID</option>
+              <option *ngFor="let task of tasks" [value]="task.id">
+                {{ task.id }} - {{ task.title }}
+              </option>
+            </select>
+            <button class="btn btn-outline-primary" (click)="loadTask()" style="min-width: 100px;">
+              Search
+            </button>
+          </div>
+  
+          <form id="taskForm" (submit)="onSubmit($event)">
+            <!-- Title Field -->
+            <div class="mb-3 text-start"> <!-- Left-align form fields -->
+              <label for="title" class="form-label">Title*</label>
+              <input type="text" class="form-control" id="title" name="title"
+                     [(ngModel)]="title" #titleInput="ngModel"
+                     required maxlength="250"
+                     placeholder="Enter task title (required)">
+              <div *ngIf="titleInput.invalid && (titleInput.dirty || titleInput.touched)"
+                   class="text-danger">
+                <div *ngIf="titleInput.errors?.['required']">Title is required!</div>
+                <div *ngIf="titleInput.errors?.['maxlength']">Max 250 characters</div>
+              </div>
+            </div>
+            
+            <!-- Description Field -->
+            <div class="mb-3 text-start">
+              <label for="description" class="form-label">Description</label>
+              <textarea class="form-control" id="description" name="description"
+                        [(ngModel)]="description" #descInput="ngModel"
+                        rows="3" maxlength="250"
+                        placeholder="Enter description (up to 250 characters)"></textarea>
+              <div class="text-muted small">{{ description.length }}/250</div>
+            </div>
+            
+            <!-- Status Dropdown -->
+            <div class="mb-3 text-start">
+              <label for="status" class="form-label">Status</label>
+              <select class="form-select" id="status" name="status" [(ngModel)]="status">
+                <option value="Pending">Pending</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+              </select>
+            </div>
+            
+            <!-- Created At Field -->
+            <div class="mb-3 text-start">
+              <label class="form-label">Created At</label>
+              <input type="text" class="form-control" [value]="createdAt | date:'medium'" readonly>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-between mt-4">
+              <button type="button" class="btn btn-danger" 
+                      (click)="deleteTask()" 
+                      [disabled]="!selectedTaskId">
+                Delete
+              </button>
+              <div>
+                <button type="button" class="btn btn-secondary me-2" 
+                        (click)="resetForm()">
+                  Reset
+                </button>
+                <button type="button" class="btn btn-success me-2" 
+                        (click)="updateTask()" 
+                        [disabled]="!selectedTaskId || !title">
+                  Update
+                </button>
+                <button type="submit" class="btn btn-primary" 
+                        [disabled]="!title">
+                  Save New
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      <!-- Right Column (Task List) -->
+      <div class="col-md-6">
+        <div class="p-4 border rounded-3 h-100">
+          <h2 class="mb-4 text-center">Task List</h2> <!-- Centered title -->
+          
+          <div *ngIf="tasks.length > 0" class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Title</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let task of tasks" 
+                    (click)="selectTask(task.id)"
+                    [class.table-primary]="selectedTaskId === task.id">
+                  <td>{{ task.id }}</td>
+                  <td class="text-truncate" style="max-width: 150px;">{{ task.title }}</td>
+                  <td>
+                    <span class="badge" 
+                          [ngClass]="{
+                            'bg-warning': task.status === 'Pending',
+                            'bg-info': task.status === 'In Progress',
+                            'bg-success': task.status === 'Completed'
+                          }">
+                      {{ task.status }}
+                    </span>
+                  </td>
+                  <td>{{ task.createdAt | date:'short' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div *ngIf="tasks.length === 0" class="alert alert-warning text-center">
+            No tasks found. Create one above!
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
