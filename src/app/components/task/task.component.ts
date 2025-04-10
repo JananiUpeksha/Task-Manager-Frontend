@@ -107,6 +107,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-task',
@@ -117,28 +118,30 @@ import { ApiService } from '../../services/api.service';
 })
 export class TaskComponent implements OnInit {
   // Form fields
-  selectedTaskId: string | null = null;
+  selectedTaskId: number | null = null;
   title: string = '';
   description: string = '';
   status: string = 'Pending';
+  userId: number | null = null;
   createdAt: Date = new Date();
-  userId: number = 1; // You'll need to get this from your auth system
 
-  // Task list
+  // Lists
   tasks: any[] = [];
+  users: any[] = [];
 
   // State management
   loading: boolean = false;
   error: string = '';
   action: 'create' | 'update' | 'delete' | '' = '';
+  successMessage: string = ''; // NEW: Added for success notifications
 
   constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
     this.loadAllTasks();
+    this.loadAllUsers();
   }
 
-  // Load all tasks from API
   loadAllTasks(): void {
     this.loading = true;
     this.apiService.getAllTasks().subscribe({
@@ -147,78 +150,70 @@ export class TaskComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        console.error('Error loading tasks:', err);
-        this.error = 'Failed to load tasks';
-        this.loading = false;
+        this.handleError('Failed to load tasks', err);
       }
     });
   }
 
-  // Load selected task details
+  loadAllUsers(): void {
+    this.apiService.getAllUsers().subscribe({
+      next: (users) => {
+        this.users = users;
+        if (this.users.length > 0 && !this.userId) {
+          this.userId = this.users[0].id;
+        }
+      },
+      error: (err) => {
+        console.error('Failed to load users', err);
+      }
+    });
+  }
+
   loadTask(): void {
     if (!this.selectedTaskId) return;
     
     this.loading = true;
-    const taskId = Number(this.selectedTaskId);
-    this.apiService.getTaskById(taskId).subscribe({
+    this.apiService.getTaskById(this.selectedTaskId).subscribe({
       next: (task) => {
         this.title = task.title;
         this.description = task.description;
         this.status = task.status;
+        this.userId = task.userId;
         this.createdAt = task.createdAt ? new Date(task.createdAt) : new Date();
         this.loading = false;
       },
       error: (err) => {
-        console.error('Error loading task:', err);
-        this.error = 'Failed to load task details';
-        this.loading = false;
+        this.handleError('Failed to load task details', err);
       }
     });
   }
 
-  // Update existing task
   updateTask(): void {
-    if (!this.selectedTaskId || !this.title) {
-      this.error = 'Please select a task and add a title!';
+    if (!this.selectedTaskId || !this.title || !this.userId) {
+      this.error = 'Please select a task and fill all required fields!';
       return;
     }
 
-    this.loading = true;
-    this.action = 'update';
     const taskData = {
-      id: Number(this.selectedTaskId),
+      id: this.selectedTaskId,
       title: this.title,
       description: this.description,
       status: this.status,
       userId: this.userId
     };
 
-    this.apiService.updateTask(Number(this.selectedTaskId), taskData).subscribe({
-      next: () => {
-        this.error = '';
-        this.loading = false;
-        this.action = '';
-        this.loadAllTasks();
-      },
-      error: (err) => {
-        console.error('Error updating task:', err);
-        this.error = 'Failed to update task';
-        this.loading = false;
-        this.action = '';
-      }
-    });
+    this.executeAction('update', () => 
+      this.apiService.updateTask(this.selectedTaskId!, taskData)
+    );
   }
 
-  // Submit new task
   onSubmit(event: Event): void {
     event.preventDefault();
-    if (!this.title) {
-      this.error = 'Title is required!';
+    if (!this.title || !this.userId) {
+      this.error = 'Title and user are required!';
       return;
     }
 
-    this.loading = true;
-    this.action = 'create';
     const newTask = {
       title: this.title,
       description: this.description,
@@ -226,24 +221,11 @@ export class TaskComponent implements OnInit {
       userId: this.userId
     };
 
-    this.apiService.createTask(newTask).subscribe({
-      next: () => {
-        this.error = '';
-        this.loading = false;
-        this.action = '';
-        this.resetForm();
-        this.loadAllTasks();
-      },
-      error: (err) => {
-        console.error('Error creating task:', err);
-        this.error = 'Failed to create task';
-        this.loading = false;
-        this.action = '';
-      }
-    });
+    this.executeAction('create', () => 
+      this.apiService.createTask(newTask)
+    );
   }
 
-  // Delete task
   deleteTask(): void {
     if (!this.selectedTaskId) return;
     
@@ -251,27 +233,12 @@ export class TaskComponent implements OnInit {
       return;
     }
 
-    this.loading = true;
-    this.action = 'delete';
-    this.apiService.deleteTask(Number(this.selectedTaskId)).subscribe({
-      next: () => {
-        this.error = '';
-        this.loading = false;
-        this.action = '';
-        this.resetForm();
-        this.loadAllTasks();
-      },
-      error: (err) => {
-        console.error('Error deleting task:', err);
-        this.error = 'Failed to delete task';
-        this.loading = false;
-        this.action = '';
-      }
-    });
+    this.executeAction('delete', () => 
+      this.apiService.deleteTask(this.selectedTaskId!)
+    );
   }
 
-  // Helper methods
-  selectTask(taskId: string): void {
+  selectTask(taskId: number): void {
     this.selectedTaskId = taskId;
     this.loadTask();
   }
@@ -281,11 +248,68 @@ export class TaskComponent implements OnInit {
     this.title = '';
     this.description = '';
     this.status = 'Pending';
+    this.userId = this.users.length > 0 ? this.users[0].id : null;
     this.createdAt = new Date();
     this.error = '';
+    this.successMessage = ''; // NEW: Clear success message on reset
   }
 
-  clearError(): void {
+  getUserById(userId: number): any {
+    return this.users.find(user => user.id === userId);
+  }
+
+  // UPDATED: Optimized executeAction method
+  private executeAction(
+    action: 'create' | 'update' | 'delete',
+    serviceCall: () => Observable<any>
+  ): void {
+    this.loading = true;
+    this.action = action;
     this.error = '';
+    this.successMessage = '';
+
+    serviceCall().subscribe({
+      next: (updatedTask) => {
+        // Optimized local updates instead of full reload
+        if (action === 'create') {
+          this.tasks = [...this.tasks, updatedTask];
+        } else if (action === 'update') {
+          this.tasks = this.tasks.map(t => 
+            t.id === updatedTask.id ? updatedTask : t
+          );
+        } else if (action === 'delete') {
+          this.tasks = this.tasks.filter(t => t.id !== this.selectedTaskId);
+        }
+
+        this.successMessage = `Task ${action}d successfully!`; // NEW: Success feedback
+        setTimeout(() => this.successMessage = '', 3000); // NEW: Auto-hide message
+        
+        if (action !== 'delete') {
+          this.resetForm();
+        }
+      },
+      error: (err) => {
+        this.handleError(`Failed to ${action} task`, err);
+      },
+      complete: () => {
+        this.loading = false;
+        this.action = '';
+      }
+    });
+  }
+
+  private handleError(message: string, error: any): void {
+    console.error(message, error);
+    this.error = message;
+    if (error.error?.message) {
+      this.error += `: ${error.error.message}`;
+    }
+    this.loading = false;
+    this.action = '';
+  }
+  
+  // NEW: Added trackBy function for efficient rendering
+  trackByTaskId(index: number, task: any): number {
+    return task.id;
   }
 }

@@ -90,7 +90,8 @@ export class ApiService {
   */
  // api.service.ts
 
-import { Injectable } from '@angular/core';
+
+ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -105,11 +106,16 @@ interface Task {
   userId: number;
 }
 
+interface User {
+  id: number;
+  username: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  private baseUrl = environment.apiUrl || 'http://localhost:5050';
+  private baseUrl = '/api'; // Using proxy like in AuthService
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
@@ -121,23 +127,29 @@ export class ApiService {
     });
   }
 
+  // Task methods
   getAllTasks(): Observable<Task[]> {
-    return this.http.get<Task[]>(`${this.baseUrl}/task/api/v1/task`, { headers: this.getHeaders() });
+    return this.http.get<Task[]>(`${this.baseUrl}/v1/task`, { headers: this.getHeaders() });
   }
 
   getTaskById(id: number): Observable<Task> {
-    return this.http.get<Task>(`${this.baseUrl}/task/${id}`, { headers: this.getHeaders() });
+    return this.http.get<Task>(`${this.baseUrl}/v1/task/${id}`, { headers: this.getHeaders() });
   }
 
   createTask(task: Omit<Task, 'id'>): Observable<Task> {
-    return this.http.post<Task>(`${this.baseUrl}/task`, task, { headers: this.getHeaders() });
+    return this.http.post<Task>(`${this.baseUrl}/v1/task`, task, { headers: this.getHeaders() });
   }
 
   updateTask(id: number, task: Task): Observable<Task> {
-    return this.http.put<Task>(`${this.baseUrl}/task/${id}`, task, { headers: this.getHeaders() });
+    return this.http.put<Task>(`${this.baseUrl}/v1/task/${id}`, task, { headers: this.getHeaders() });
   }
 
   deleteTask(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/task/${id}`, { headers: this.getHeaders() });
+    return this.http.delete<void>(`${this.baseUrl}/v1/task/${id}`, { headers: this.getHeaders() });
+  }
+
+  // User methods
+  getAllUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.baseUrl}/v1/user`, { headers: this.getHeaders() });
   }
 }
