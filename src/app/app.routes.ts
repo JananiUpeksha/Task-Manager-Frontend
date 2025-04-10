@@ -43,6 +43,8 @@ export const routes: Routes = [
   }
 ];
 */
+
+/*
 export const routes: Routes = [
   // Public routes (outside layout)
   { 
@@ -72,4 +74,27 @@ export const routes: Routes = [
   // Redirect rules
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' }
+];
+*/
+export const routes: Routes = [
+  // Public routes (no layout)
+  { path: 'login', component: LoginComponent },
+  { path: 'signup', component: SignupComponent },
+
+  // Protected routes (inside layout)
+  {
+    path: '',
+    component: LayoutComponent, // Layout wraps these routes
+    children: [
+      { path: 'home', component: HomeComponent },
+      { path: 'tasks', component: TaskComponent },
+      { path: 'taskDetails', component: TaskDetailsComponent },
+      { path: 'taskDetails/:id', component: TaskDetailsComponent },
+      { path: '', redirectTo: 'home', pathMatch: 'full' },
+    ],
+  },
+
+  // Redirects
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '**', redirectTo: 'login' },
 ];

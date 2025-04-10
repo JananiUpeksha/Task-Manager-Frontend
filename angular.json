@@ -57,6 +57,9 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "proxyConfig": "/home/janani/Desktop/angular/first-project/proxy.conf.json"
+          },
           "configurations": {
             "production": {
               "buildTarget": "first-project:build:production"
