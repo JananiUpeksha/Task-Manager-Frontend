@@ -1,32 +1,35 @@
 <!-- layout.component.html -->
 <app-header></app-header>
 <div class="dashboard-container">
-  <!-- Sidebar -->
+  <!-- Modern Sidebar -->
   <div class="sidebar">
-    <div class="sidebar-header">
-      <img src="img.png" alt="Logo" class="sidebar-logo" />
-    </div>
-
     <div class="nav-menu">
       <a routerLink="/home" class="nav-item" [class.active]="isActive('/home')">
-        <i>📊</i> Dashboard
+        <div class="nav-icon">📊</div>
+        <span class="nav-text">Dashboard</span>
+        <div class="active-indicator"></div>
       </a>
       <a routerLink="/tasks" class="nav-item" [class.active]="isActive('/tasks')">
-        <i>✅</i> Manage Tasks
+        <div class="nav-icon">✅</div>
+        <span class="nav-text">Manage Tasks</span>
+        <div class="active-indicator"></div>
       </a>
       <a routerLink="/taskDetails" class="nav-item" [class.active]="isActive('/taskDetails')">
-        <i>📂</i> Task Details
+        <div class="nav-icon">📂</div>
+        <span class="nav-text">Task Details</span>
+        <div class="active-indicator"></div>
       </a>
     </div>
 
-    <div class="logout-container">
+    <div class="sidebar-footer">
       <button class="logout-btn" (click)="logout()">
-        <i>🔓</i> Logout
+        <div class="logout-icon">→</div>
+        <span>Sign Out</span>
       </button>
     </div>
   </div>
 
-  <!-- Main Content Area with Router Outlet -->
+  <!-- Main Content Area -->
   <div class="main-content">
     <router-outlet></router-outlet>
   </div>

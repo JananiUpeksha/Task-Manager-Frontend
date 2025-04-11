@@ -13,6 +13,13 @@ export class HomeComponent {
   tasks = [
     { id: 1, title: 'Complete Angular project', status: 'In Progress', priority: 'High' },
     { id: 2, title: 'Review pull requests', status: 'Pending', priority: 'Medium' },
-    { id: 3, title: 'Update documentation', status: 'Completed', priority: 'Low' }
+    { id: 3, title: 'Update documentation', status: 'Completed', priority: 'Low' },
   ];
+
+  getDueDate(): Date {
+    // Example due date logic
+    const date = new Date();
+    date.setDate(date.getDate() + Math.floor(Math.random() * 7));
+    return date;
+  }
 }

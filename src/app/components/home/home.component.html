@@ -1,28 +1,116 @@
 <!-- dashboard.component.html -->
-<div class="dashboard-content">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Task Dashboard</h2>
-    <button class="btn btn-primary">Add Task</button>
-  </div>
+<div class="dashboard-container">
   
-  <div class="row row-cols-1 row-cols-md-3 g-4">
-    <div class="col" *ngFor="let task of tasks">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">{{ task.title }}</h5>
-          <div class="d-flex gap-2 mb-3">
-            <span class="badge bg-{{ 
-              task.status === 'Completed' ? 'success' : 
-              task.status === 'In Progress' ? 'warning' : 'secondary'
-            }}">{{ task.status }}</span>
-            <span class="badge bg-{{
-              task.priority === 'High' ? 'danger' :
-              task.priority === 'Medium' ? 'warning' : 'info'
-            }}">{{ task.priority }}</span>
+  <!-- Stats Cards Row -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-content">
+        <h3>12</h3>
+        <p>Total Tasks</p>
+      </div>
+      <i class="bi bi-list-task stat-icon"></i>
+    </div>
+    <div class="stat-card">
+      <div class="stat-content">
+        <h3>5</h3>
+        <p>In Progress</p>
+      </div>
+      <i class="bi bi-clock-history stat-icon"></i>
+    </div>
+    <div class="stat-card">
+      <div class="stat-content">
+        <h3>7</h3>
+        <p>Completed</p>
+      </div>
+      <i class="bi bi-check-circle stat-icon"></i>
+    </div>
+    <div class="stat-card">
+      <div class="stat-content">
+        <h3>2</h3>
+        <p>Overdue</p>
+      </div>
+      <i class="bi bi-exclamation-triangle stat-icon"></i>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="dashboard-content">
+    <!-- Task Cards Section -->
+    <div class="section-header">
+      <h2>My Tasks</h2>
+      <div class="view-options">
+        <button class="btn btn-sm btn-outline-secondary active">All</button>
+        <button class="btn btn-sm btn-outline-secondary">Today</button>
+        <button class="btn btn-sm btn-outline-secondary">This Week</button>
+      </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      <div class="col" *ngFor="let task of tasks">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start">
+              <h5 class="card-title">{{ task.title }}</h5>
+              <div class="dropdown">
+                <button class="btn btn-sm btn-ghost" type="button" data-bs-toggle="dropdown">
+                  <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Edit</a></li>
+                  <li><a class="dropdown-item" href="#">Delete</a></li>
+                  <li><a class="dropdown-item" href="#">Mark Complete</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="d-flex gap-2 mb-3">
+              <span class="badge bg-{{ 
+                task.status === 'Completed' ? 'success' : 
+                task.status === 'In Progress' ? 'warning' : 'secondary'
+              }}">{{ task.status }}</span>
+              <span class="badge bg-{{
+                task.priority === 'High' ? 'danger' :
+                task.priority === 'Medium' ? 'warning' : 'info'
+              }}">{{ task.priority }}</span>
+            </div>
+            <p class="card-text">Some quick example text to build on the card title...</p>
+            <div class="progress mb-2">
+              <div class="progress-bar" [ngClass]="{
+                'bg-success': task.status === 'Completed',
+                'bg-warning': task.status === 'In Progress',
+                'bg-secondary': task.status === 'Pending'
+              }" [style.width.%]="task.status === 'Completed' ? 100 : task.status === 'In Progress' ? 50 : 0"></div>
+            </div>
+          </div>
+          <div class="card-footer bg-transparent">
+            <div class="d-flex justify-content-between align-items-center">
+              <small class="text-muted">Due: {{ getDueDate() | date }}</small>
+            </div>
           </div>
         </div>
-        <div class="card-footer bg-transparent">
-          <small class="text-muted">Last updated 3 mins ago</small>
+      </div>
+    </div>
+
+    <!-- Recent Activity Section -->
+    <div class="section-header mt-5">
+      <h2>Recent Activity</h2>
+    </div>
+    <div class="activity-list">
+      <div class="activity-item">
+        <div class="activity-avatar">
+          <img src="proP1.png" alt="User">
+        </div>
+        <div class="activity-content">
+          <p><strong>John Doe</strong> completed task "Update documentation"</p>
+          <small class="text-muted">2 hours ago</small>
+        </div>
+      </div>
+      <div class="activity-item">
+        <div class="activity-avatar">
+          <img src="proP2.png" alt="User">
+        </div>
+        <div class="activity-content">
+          <p><strong>Jane Smith</strong> commented on "Review pull requests"</p>
+          <small class="text-muted">5 hours ago</small>
         </div>
       </div>
     </div>

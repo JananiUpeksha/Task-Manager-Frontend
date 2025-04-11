@@ -1,1 +1,74 @@
-<p>task-details works!</p>
+<!-- task-details.component.html -->
+<div class="container mt-4">
+  <!-- Loading Indicator -->
+  <div *ngIf="loading" class="text-center my-4">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p>Loading tasks...</p>
+  </div>
+
+  <!-- Error Display -->
+  <div *ngIf="error" class="alert alert-danger alert-dismissible fade show">
+    {{ error }}
+    <button type="button" class="btn-close" (click)="error = ''"></button>
+  </div>
+
+  <!-- Success Message -->
+  <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show">
+    {{ successMessage }}
+    <button type="button" class="btn-close" (click)="successMessage = ''"></button>
+  </div>
+
+  <!-- Filter Controls -->
+  <div class="row mb-3">
+    <div class="col-md-4">
+      <label for="statusFilter" class="form-label">Filter by Status</label>
+      <select id="statusFilter" class="form-select" 
+              [(ngModel)]="selectedStatus" 
+              (change)="onStatusChange()">
+        <option *ngFor="let status of statusOptions" [value]="status">
+          {{ status }}
+        </option>
+      </select>
+    </div>
+    <div class="col-md-2 d-flex align-items-end">
+      <button class="btn btn-primary" (click)="loadTasks()" [disabled]="loading">
+        Refresh
+      </button>
+    </div>
+  </div>
+
+  <!-- Tasks Table -->
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Created At</th>
+          <th>User</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let task of filteredTasks; trackBy: trackByTaskId">
+          <td>{{ task.id }}</td>
+          <td>{{ task.title }}</td>
+          <td>{{ task.description }}</td>
+          <td>
+            <span [class]="getStatusClass(task.status)">
+              {{ task.status }}
+            </span>
+          </td>
+          <td>{{ task.createdAt | date:'medium' }}</td>
+          <td>User #{{ task.userId }}</td>
+        </tr>
+        <tr *ngIf="filteredTasks.length === 0 && !loading">
+          <td colspan="6" class="text-center">No tasks found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

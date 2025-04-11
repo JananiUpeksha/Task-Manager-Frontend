@@ -1,0 +1,21 @@
+/* task-details.component.css */
+.badge {
+  padding: 0.5em 1em;
+  border-radius: 50px;
+  font-size: 0.9em;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.table-hover tbody tr {
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.btn-refresh {
+  margin-left: 10px;
+}
