@@ -1,59 +1,68 @@
-# FirstProject
+# 📝 Task Manager Web Application
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.6.
+Full-stack task manager app using **Angular + Bootstrap** for frontend and **Spring Boot + MySQL + JWT** for backend.
 
-## Development server
+### 🔗 Project Links
+- 🔥 Frontend: [GitHub - Frontend](https://github.com/JananiUpeksha/Task-Manager-Frontend)
+- 🚀 Backend: [GitHub - Backend](https://github.com/JananiUpeksha/Task-Manager)
 
-To start a local development server, run:
+---
+## ✨ Features
+
+- ✅ Create, view, update, delete tasks
+- 🔍 Filter by task status (TO_DO, IN_PROGRESS, DONE)
+- 🔐 JWT-based authentication with login/register
+- 💾 MySQL database integration
+- 🎨 Responsive UI with Bootstrap
+---
+
+## ⚙️ Technologies
+
+- **Frontend**: Angular, Bootstrap, RxJS
+- **Backend**: Spring Boot, Spring Security, JWT, MySQL
+- **Dev Tools**: Maven
+---
+
+## 🚀 Getting Started
+
+### 🔙 Backend
+
+1. Update `application.properties` with your DB credentials.
+2. Run with Maven:
 
 ```bash
+cd backend
+./mvnw spring-boot:run
+```
+
+### 🔜 Frontend
+
+```bash
+cd frontend
+npm install
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Visit: `http://localhost:4200`
+---
 
-## Code scaffolding
+## 🔐 Auth Overview
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- `POST /task/api/v1/user/signup` → Register new user
+- `POST /task/api/v1/user/signin` → Returns JWT token
+- Use token in headers:  
+  `Authorization: Bearer <token>`
+---
 
-```bash
-ng generate component component-name
-```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
 
-```bash
-ng generate --help
-```
+Runs backend, frontend, and MySQL in containers.
+---
 
-## Building
+## 🧪 API Overview
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- `GET /task/api/v1/task` – All tasks  
+- `POST /task/api/v1/task` – Create task  
+- `PUT /task/api/v1/task/{id}` – Update task  
+- `DELETE /task/api/v1/task/{id}` – Delete task  
+---
